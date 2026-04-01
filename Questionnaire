@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionnaire</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --bg: #f8fafc;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: #1e2937;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 40px 30px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 30px;
+    }
+    .progress {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      margin: 30px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .question {
+      display: none;
+      margin-bottom: 40px;
+    }
+    .question.active {
+      display: block;
+    }
+    h2 {
+      margin: 0 0 15px 0;
+      font-size: 1.25rem;
+    }
+    label {
+      display: block;
+      margin: 12px 0 8px;
+      font-weight: 600;
+      color: #334155;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    .date-picker {
+      display: flex;
+      gap: 15px;
+    }
+    .date-column {
+      flex: 1;
+    }
+    .date-column select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .options label {
+      display: block;
+      margin: 10px 0;
+      font-weight: normal;
+    }
+    button {
+      padding: 14px 32px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 8px 5px;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-secondary {
+      background: #64748b;
+      color: white;
+    }
+    .result {
+      text-align: center;
+      padding: 30px;
+      background: #f0fdf4;
+      border-radius: 16px;
+      display: none;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Questionnaire</h1>
+    <p class="subtitle">Merci de prendre quelques instants pour répondre</p>
+
+    <div class="progress">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <!-- Question 1 -->
+    <div id="q1" class="question active">
+      <h2>1. Quel est votre nom ?</h2>
+      <input type="text" id="name" placeholder="Votre nom complet">
+    </div>
+
+    <!-- Question 2 : Date de naissance -->
+    <div id="q2" class="question">
+      <h2>2. Quelle est votre date de naissance ?</h2>
+      <div class="date-picker">
+        <div class="date-column">
+          <label>Jour</label>
+          <select id="day"></select>
+        </div>
+        <div class="date-column">
+          <label>Mois</label>
+          <select id="month" onchange="updateDays()">
+            <option value="1">Janvier</option>
+            <option value="2">Février</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Août</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+          </select>
+        </div>
+        <div class="date-column">
+          <label>Année</label>
+          <select id="year" onchange="updateDays()"></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div id="q3" class="question">
+      <h2>3. Quel est votre genre ?</h2>
+      <div class="options">
+        <label><input type="radio" name="gender" value="Homme"> Homme</label>
+        <label><input type="radio" name="gender" value="Femme"> Femme</label>
+        <label><input type="radio" name="gender" value="Autre"> Autre / Préfère ne pas dire</label>
+      </div>
+    </div>
+
+    <!-- Question 4 -->
+    <div id="q4" class="question">
+      <h2>4. Quels sont vos centres d'intérêt ? (plusieurs choix possibles)</h2>
+      <div class="options">
+        <label><input type="checkbox" value="Sport"> Sport</label>
+        <label><input type="checkbox" value="Musique"> Musique</label>
+        <label><input type="checkbox" value="Lecture"> Lecture</label>
+        <label><input type="checkbox" value="Voyage"> Voyage</label>
+        <label><input type="checkbox" value="Cuisine"> Cuisine</label>
+        <label><input type="checkbox" value="Technologie"> Technologie</label>
+      </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div id="q5" class="question">
+      <h2>5. Sur une échelle de 1 à 10, à quel point êtes-vous satisfait de nos services ?</h2>
+      <select id="satisfaction">
+        <option value="">Choisissez une note</option>
+        <option value="1">1 - Très insatisfait</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 - Neutre</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10 - Très satisfait</option>
+      </select>
+    </div>
+
+    <!-- Question 6 -->
+    <div id="q6" class="question">
+      <h2>6. Un commentaire ou une suggestion ? (facultatif)</h2>
+      <textarea id="comment" rows="4" placeholder="Votre message ici..."></textarea>
+    </div>
+
+    <!-- Question 7 -->
+    <div id="q7" class="question">
+      <h2>7. Êtes-vous déjà venu ici ?</h2>
+      <div class="options">
+        <label><input type="radio" name="visited" value="Oui"> Oui</label>
+        <label><input type="radio" name="visited" value="Non"> Non</label>
+      </div>
+    </div>
+
+    <!-- Question 8 -->
+    <div id="q8" class="question">
+      <h2>8. Où habitez-vous ?</h2>
+      <input type="text" id="location" placeholder="Ville, région ou pays">
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div style="text-align:center; margin-top:30px;">
+      <button class="btn-secondary" id="prevBtn" onclick="prevQuestion()" style="display:none;">← Précédent</button>
+      <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Suivant →</button>
+      <button class="btn-primary" id="submitBtn" onclick="submitForm()" style="display:none;">Envoyer le questionnaire</button>
+    </div>
+  </div>
+
+  <script>
+    let currentQuestion = 1;
+    const totalQuestions = 8;
+
+    function populateYears() {
+      const yearSelect = document.getElementById('year');
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1900; y--) {
+        const option = document.createElement('option');
+        option.value = y;
+        option.textContent = y;
+        yearSelect.appendChild(option);
+      }
+      yearSelect.value = 1995;
+    }
+
+    function updateDays() {
+      const daySelect = document.getElementById('day');
+      const month = parseInt(document.getElementById('month').value);
+      const year = parseInt(document.getElementById('year').value);
+
+      let days = 31;
+      if ([4,6,9,11].includes(month)) days = 30;
+      if (month === 2) {
+        days = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28;
+      }
+
+      const current = daySelect.value || 1;
+      daySelect.innerHTML = '';
+      for (let d = 1; d <= days; d++) {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d < 10 ? '0' + d : d;
+        daySelect.appendChild(opt);
+      }
+      daySelect.value = Math.min(current, days);
+    }
+
+    function showQuestion(n) {
+      document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+      document.getElementById(`q${n}`).classList.add('active');
+
+      document.getElementById('prevBtn').style.display = (n === 1) ? 'none' : 'inline-block';
+      document.getElementById('nextBtn').style.display = (n === totalQuestions) ? 'none' : 'inline-block';
+      document.getElementById('submitBtn').style.display = (n === totalQuestions) ? 'inline-block' : 'none';
+
+      const progress = (n / totalQuestions) * 100;
+      document.getElementById('progress').style.width = `${progress}%`;
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 1) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+      }
+    }
+
+    function submitForm() {
+      const name = document.getElementById('name').value.trim() || "Anonyme";
+      const day = document.getElementById('day').value;
+      const month = document.getElementById('month').value;
+      const year = document.getElementById('year').value;
+      const birthDate = (day && month && year) ? `${day}/${month}/${year}` : "non renseignée";
+
+      const gender = document.querySelector('input[name="gender"]:checked') 
+        ? document.querySelector('input[name="gender"]:checked').value 
+        : "non renseigné";
+
+      const interests = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => cb.value).join(', ') || "aucun";
+
+      const satisfaction = document.getElementById('satisfaction').value || "non renseigné";
+      const comment = document.getElementById('comment').value.trim();
+      const visited = document.querySelector('input[name="visited"]:checked') 
+        ? document.querySelector('input[name="visited"]:checked').value 
+        : "non renseigné";
+      const location = document.getElementById('location').value.trim() || "non renseigné";
+
+      let html = `
+        <h2>Merci ${name} !</h2>
+        <p><strong>Date de naissance :</strong> ${birthDate}</p>
+        <p><strong>Genre :</strong> ${gender}</p>
+        <p><strong>Centres d'intérêt :</strong> ${interests}</p>
+        <p><strong>Satisfaction de nos services :</strong> ${satisfaction}/10</p>
+        <p><strong>Déjà venu ? :</strong> ${visited}</p>
+        <p><strong>Lieu de résidence :</strong> ${location}</p>
+      `;
+
+      if (comment) html += `<p><strong>Commentaire :</strong><br>${comment}</p>`;
+
+      html += `<p style="margin-top:30px; color:#10b981; font-weight:bold;">✅ Questionnaire envoyé avec succès !</p>`;
+
+      document.getElementById('result').innerHTML = html;
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('submitBtn').style.display = 'none';
+    }
+
+    // Initialisation
+    window.onload = function() {
+      populateYears();
+      updateDays();
+      showQuestion(1);
+    };
+  </script>
+</body>
+</html>
